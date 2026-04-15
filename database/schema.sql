@@ -15,7 +15,7 @@ DROP SCHEMA IF EXISTS `gruppe5` ;
 -- -----------------------------------------------------
 -- Schema gruppe5
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `gruppe5` DEFAULT CHARACTER SET utf8 ;
+CREATE SCHEMA IF NOT EXISTS `gruppe5` DEFAULT CHARACTER SET utf8mb4 ;
 USE `gruppe5` ;
 
 -- -----------------------------------------------------
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `gruppe5`.`Fahrer` (
   `Straße` VARCHAR(45) NULL,
   `Hausnummer` VARCHAR(45) NULL,
   `Telefonnummer` VARCHAR(45) NULL,
-  `PLZ` INT NULL,
+  `PLZ` VARCHAR(5) NULL,
   `Ort` VARCHAR(45) NULL,
   `Teamname` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`Mitarbeiter-ID`, `Teamname`),
@@ -49,19 +49,19 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `gruppe5`.`Rennen` ;
 
 CREATE TABLE IF NOT EXISTS `gruppe5`.`Rennen` (
-  `RennId` INT NULL AUTO_INCREMENT,
+  `RennId` INT NOT NULL AUTO_INCREMENT,
   `Datum` DATE NULL,
-  `PLZ` VARCHAR(45) NULL,
+  `PLZ` VARCHAR(5) NULL,
   `Ort` VARCHAR(45) NULL,
-  `Kilometer` VARCHAR(45) NULL,
-  `Steigung` VARCHAR(45) NULL,
-  `Hoehenmeter` VARCHAR(45) NULL,
+  `Kilometer` DECIMAL(10,2) NULL,
+  `Steigung` DECIMAL(10,2) NULL,
+  `Hoehenmeter` DECIMAL(10,2) NULL,
   `VeranstalterLoginName` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`RennId`),
   INDEX `fk_Rennen_Veranstalter1_idx` (`VeranstalterLoginName` ASC) VISIBLE,
   CONSTRAINT `fk_Rennen_Veranstalter1`
     FOREIGN KEY (`VeranstalterLoginName`)
-    REFERENCES `gruppe5`.`Veranstalter` (`VeranstalterLoginname`)
+    REFERENCES `gruppe5`.`Veranstalter` (`VeranstalterLoginName`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -92,7 +92,7 @@ DROP TABLE IF EXISTS `gruppe5`.`Teamchef` ;
 
 CREATE TABLE IF NOT EXISTS `gruppe5`.`Teamchef` (
   `TeamchefLoginName` VARCHAR(50) NOT NULL,
-  `Kennwort` VARCHAR(45) NULL,
+  `Kennwort` VARCHAR(255) NULL,
   `Vorname` VARCHAR(45) NULL,
   `Nachname` VARCHAR(45) NULL,
   PRIMARY KEY (`TeamchefLoginName`))
@@ -108,11 +108,11 @@ CREATE TABLE IF NOT EXISTS `gruppe5`.`teilnehmen` (
   `MitarbeiterId` INT NOT NULL,
   `Teamname` VARCHAR(50) NOT NULL,
   `RennId` INT NOT NULL,
-  `Startnummer` VARCHAR(45) NULL,
-  `Platzierung` VARCHAR(45) NULL,
-  `Zeit` VARCHAR(45) NULL,
-  `VeranstalterPraemie` VARCHAR(45) NULL,
-  `TeamPraemie` VARCHAR(45) NULL,
+  `Startnummer` INT NULL,
+  `Platzierung` INT NULL,
+  `Zeit` TIME NULL,
+  `VeranstalterPraemie` DECIMAL(10,2) NULL,
+  `TeamPraemie` DECIMAL(10,2) NULL,
   PRIMARY KEY (`MitarbeiterId`, `Teamname`, `RennId`),
   INDEX `fk_Fahrer_has_Rennen_Rennen1_idx` (`RennId` ASC) VISIBLE,
   INDEX `fk_Fahrer_has_Rennen_Fahrer1_idx` (`MitarbeiterId` ASC, `Teamname` ASC) VISIBLE,
@@ -136,7 +136,7 @@ DROP TABLE IF EXISTS `gruppe5`.`Training` ;
 
 CREATE TABLE IF NOT EXISTS `gruppe5`.`Training` (
   `Datum` DATE NOT NULL,
-  `Kilometer` VARCHAR(45) NULL,
+  `Kilometer` DECIMAL(10,2) NULL,
   `Mitarbeiter-ID` INT NOT NULL,
   `Teamname` VARCHAR(50) NOT NULL,
   `Trainingsziel` VARCHAR(45) NOT NULL,
@@ -173,9 +173,9 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `gruppe5`.`Veranstalter` ;
 
 CREATE TABLE IF NOT EXISTS `gruppe5`.`Veranstalter` (
-  `VeranstalterLoginname` VARCHAR(50) NOT NULL,
-  `Kennwort` VARCHAR(50) NULL,
-  PRIMARY KEY (`VeranstalterLoginname`))
+  `VeranstalterLoginName` VARCHAR(50) NOT NULL,
+  `Kennwort` VARCHAR(255) NULL,
+  PRIMARY KEY (`VeranstalterLoginName`))
 ENGINE = InnoDB;
 
 
